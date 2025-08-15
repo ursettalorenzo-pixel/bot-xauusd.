@@ -4,10 +4,11 @@ FROM python:3.11-slim
 # Imposta la cartella di lavoro
 WORKDIR /app
 
-# Copia i file del progetto
+# Copia i file del progetto nella cartella di lavoro
 COPY . .
 
-# Installa le dipendenze
+# Aggiorna pip e installa le dipendenze
+RUN python -m pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Comando per avviare il bot
