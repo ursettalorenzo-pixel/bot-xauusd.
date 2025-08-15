@@ -1,30 +1,18 @@
-# Usa immagine Python
+# Usa una versione ufficiale di Python leggera
 FROM python:3.11-slim
 
-# Evita richieste interattive durante apt-get
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Installa dipendenze di sistema e TA-Lib
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    build-essential \
-    wget \
-    tar \
-    gcc \
-    make && \
-    wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz && \
-    tar -xvzf ta-lib-0.4.0-src.tar.gz && \
-    cd ta-lib && ./configure --prefix=/usr && make && make install && \
-    cd .. && rm -rf ta-lib ta-lib-0.4.0-src.tar.gz && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Imposta cartella di lavoro
+# Imposta la cartella di lavoro dentro il container
 WORKDIR /app
 
-# Copia i file del progetto
+# Copia tutti i file della cartella corrente nel container
 COPY . .
 
-# Installa dipendenze Python
+# Aggiorna apt e installa build-essential e lib needed per TA-Lib
+RUN apt-get update && \
+    apt-get install -y build-essential wget && \
+    rm -rf /var/lib/apt/lists/*
+
+# Installa le dipendenze Python
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Comando per avviare il bot
